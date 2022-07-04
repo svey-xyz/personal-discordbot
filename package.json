@@ -1,0 +1,31 @@
+{
+  "name": "discordbot",
+  "version": "1.0.0",
+  "description": "Testing discord bot stuff",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/Bot.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soulelyhayden/discordbot.git"
+  },
+  "author": "svey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/soulelyhayden/discordbot/issues"
+  },
+  "homepage": "https://github.com/soulelyhayden/discordbot#readme",
+  "dependencies": {
+    "@discordjs/rest": "^0.5.0",
+    "@types/node": "^18.0.0",
+    "discord-api-types": "^0.36.1",
+    "discord.js": "^13.8.1",
+    "dotenv": "^16.0.1",
+    "dotenv-expand": "^8.0.3",
+    "fs": "^0.0.1-security",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  }
+}
