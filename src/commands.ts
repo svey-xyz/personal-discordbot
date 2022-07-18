@@ -4,8 +4,6 @@ import { Routes } from 'discord-api-types/v9';
 const path = require('node:path');
 import { Client, Collection } from 'discord.js';
 
-const dotenv = require('dotenv');
-
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file: string) => file.endsWith('.ts'));
 let commands: Array<JSON> = []
@@ -35,7 +33,6 @@ function registerCommands(client: any) {
 	(async () => {
 		try {
 			console.log('Started refreshing application (/) commands.');
-			console.log(commands)
 			await rest.put(
 				Routes.applicationCommands(clientId),
 				{ body: commands },
