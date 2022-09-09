@@ -1,4 +1,4 @@
-import { BaseCommandInteraction, Client, Interaction } from "discord.js";
+import { BaseCommandInteraction, Client, Interaction, SelectMenuInteraction } from "discord.js";
 
 export default (client: Client): void => {
 	client.on("interactionCreate", async (interaction: Interaction) => {
@@ -6,14 +6,17 @@ export default (client: Client): void => {
 			await handleCommand(client, interaction);
 		}
 		if (interaction.isSelectMenu()) {
-			const selectedRoleIDs = interaction.values;
-			selectedRoleIDs.forEach(roleID => {
-				const role = interaction.guild?.roles.fetch(roleID)
-				console.log(role);
-
-			});
-
+			await handleSelect(client, interaction)
 		}
+	});
+};
+
+const handleSelect = async (client: Client, interaction: SelectMenuInteraction) => {
+	const selectedRoleIDs = interaction.values;
+	selectedRoleIDs.forEach(roleID => {
+		const role = interaction.guild?.roles.fetch(roleID)
+		// console.log(role);
+
 	});
 };
 
