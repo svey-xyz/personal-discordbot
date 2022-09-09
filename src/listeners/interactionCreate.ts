@@ -5,6 +5,15 @@ export default (client: Client): void => {
 		if (interaction.isCommand() || interaction.isContextMenu()) {
 			await handleCommand(client, interaction);
 		}
+		if (interaction.isSelectMenu()) {
+			const selectedRoleIDs = interaction.values;
+			selectedRoleIDs.forEach(roleID => {
+				const role = interaction.guild?.roles.fetch(roleID)
+				console.log(role);
+
+			});
+
+		}
 	});
 };
 
