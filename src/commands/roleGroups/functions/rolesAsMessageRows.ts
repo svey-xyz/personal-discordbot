@@ -1,10 +1,13 @@
-import { BaseCommandInteraction,  MessageActionRow, MessageSelectMenu } from "discord.js";
+import { BaseCommandInteraction, Guild,  MessageActionRow, MessageSelectMenu } from "discord.js";
 
 type MessageSelectOption = { label: string, description: string, value: string }
 type MessageSelectOptions = Array<MessageSelectOption>
 
 export async function rolesAsMessageRows(interaction: BaseCommandInteraction, minSelection?: number, maxSelection?: number): Promise<Array<MessageActionRow>> {
-	const guildRoles = await interaction.guild!.roles.fetch();
+	const guild = interaction.guild
+	if (guild == null) throw new Error("Are you in a guild?");
+	
+	const guildRoles = await guild.roles.fetch();
 	let splitRoleSelection: Array<MessageSelectOptions> = []
 	let arrayIndex: number = 0
 	let loopIndex: number = 0;
@@ -22,7 +25,7 @@ export async function rolesAsMessageRows(interaction: BaseCommandInteraction, mi
 	let rows: any = []
 	splitRoleSelection.forEach((rolesArray, index) => {
 		let selectComponent = new MessageSelectMenu()
-			.setCustomId(`select-${index}`)
+			.setCustomId('select')
 			.setPlaceholder('Nothing selected')
 			.addOptions(rolesArray)
 			.setMinValues(minSelection ? minSelection : 0)

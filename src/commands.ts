@@ -18,17 +18,7 @@ export function deployCommands(client: any): Array<JSON> {
 		} catch (error) {
 			console.log(`Error Reading Dir: ${error}`)
 		}
-		// console.log(commandFiles)
 	}
-	// console.log(`CommandFiles: `, )
-	// const commandFiles = readdirSync(commandsPath).filter(function(file){})
-	// commandFiles.forEach((file) => {
-	// 	const commandPath = path.join(commandsPath, file);
-	// 	const command = require(commandPath);
-
-	// 	client.commands.set(command.data.name, command);
-	// 	commands.push(command.data.toJSON());
-	// });
 
 	registerCommands(client);
 

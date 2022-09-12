@@ -6,7 +6,6 @@ const dotenv = require('dotenv');
 dotenv.config()
 
 const token: string = (String)(process.env.DISCORD_TOKEN);
-const prefix: string = 'x!';
 
 const client = new Client({
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_PRESENCES],
