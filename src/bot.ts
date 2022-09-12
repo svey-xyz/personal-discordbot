@@ -1,6 +1,7 @@
 import { Client, Intents } from "discord.js";
 import ready from "./listeners/ready";
 import interactionCreate from "./listeners/interactionCreate";
+import databaseHandler from "./databaseHandler";
 
 const dotenv = require('dotenv');
 dotenv.config()
@@ -12,7 +13,10 @@ const client = new Client({
 	partials: ["MESSAGE", "CHANNEL", "REACTION"]
 });
 
-ready(client);
+const data = new databaseHandler();
+const sequelizer = data.getSequelize
+
+ready(client, sequelizer);
 interactionCreate(client);
 
 client.login(token)

@@ -25,6 +25,8 @@
     "dotenv": "^16.0.1",
     "dotenv-expand": "^8.0.3",
     "fs": "^0.0.1-security",
+    "mariadb": "^3.0.1",
+    "sequelize": "^6.21.6",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
   }

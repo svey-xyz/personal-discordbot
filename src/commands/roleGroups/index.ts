@@ -3,8 +3,23 @@ import { Client, CommandInteraction, MessageEmbed, SelectMenuInteraction } from 
 import { Command } from "../../command";
 import { commandData } from "./slashCommand"
 import { rolesAsMessageRows } from "./functions/rolesAsMessageRows";
+import { DataTypes } from "sequelize";
 
-const reactionRole: Command = {
+const roleGroupStructure = {
+	name: {
+		type: DataTypes.STRING,
+		unique: true,
+	},
+	description: DataTypes.TEXT,
+	username: DataTypes.STRING,
+	usage_count: {
+		type: DataTypes.INTEGER,
+		defaultValue: 0,
+		allowNull: false,
+	},
+}
+
+const roleGroups: Command = {
 	data: commandData,
 	async execute(client: Client, interaction: CommandInteraction) {
 		const embed = new MessageEmbed()
@@ -41,4 +56,4 @@ const reactionRole: Command = {
 	}
 };
 
-module.exports = reactionRole;
+module.exports = roleGroups;

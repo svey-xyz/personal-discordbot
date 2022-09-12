@@ -26,7 +26,7 @@ export function deployCommands(client: any): Array<JSON> {
 };
 
 function registerCommands(client: any) {
-	const clientId = '992148264356941844';
+	const clientId = (String)(process.env.DISCORD_CLIENT_ID);
 	const token: string = (String)(process.env.DISCORD_TOKEN);
 
 	const rest = new REST({ version: '9' }).setToken(token);
