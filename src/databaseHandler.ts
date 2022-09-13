@@ -48,7 +48,7 @@ export default class databaseHandler {
 
 
 
-	public async addData(namespace: string, k: any, v: any) {
+	public async setData(namespace: string, k: string, v: string) {
 		const store = this.getStore(namespace)
 		return await store.set(k, v);
 	}
@@ -58,17 +58,27 @@ export default class databaseHandler {
 		return await store.get(k)
 	}
 
+	public async setArrayData(namespace: string, k: string, v: Array<any>) {
+		const store = this.getStore(namespace);
+		return await store.set(k, JSON.stringify(v));
+	}
+
+	public async getArrayData(namespace: string, k: string) {
+		const store = this.getStore(namespace);
+		return await JSON.parse(await store.get(k))
+	}
+
 	private createStore(namespace: string): typeof Keyv {
 		if (typeof this.stores == 'undefined') throw new Error('Stores are not defined!');
 		if (typeof this.stores.get(namespace) !== 'undefined') return this.stores.get(namespace)!;
-		const store = new Keyv({ namespace: namespace })
-		this.stores.set('namespace', store)
+		const store: typeof Keyv = new Keyv({ namespace: namespace })
+		this.stores.set(namespace, store)
 		return store;
 	}
 
 	private getStore(namespace: string): typeof Keyv {
-		let store = (typeof this.stores.get(namespace) !== 'undefined') ? this.stores.get(namespace) : this.createStore(namespace);
-		return store!;
+		let store: typeof Keyv = (typeof this.stores.get(namespace) !== 'undefined') ? this.stores.get(namespace) : this.createStore(namespace);
+		return store;
 	}
 	
 }
