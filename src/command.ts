@@ -5,6 +5,5 @@ export const discordInterface = { BaseCommandInteraction, Client, MessageEmbed }
 
 export interface Command {
 	cmdData: any,
-	execute(client: Client, data: databaseHandler, interaction: BaseCommandInteraction): void,
-	select?(client: Client, data: databaseHandler,  interaction: SelectMenuInteraction): void
+	execute(client: Client, data: databaseHandler, interaction: BaseCommandInteraction): void
 }

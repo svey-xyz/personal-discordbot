@@ -25,7 +25,7 @@ export async function rolesAsMessageRows(interaction: BaseCommandInteraction, mi
 	let rows: any = []
 	splitRoleSelection.forEach((rolesArray, index) => {
 		let selectComponent = new MessageSelectMenu()
-			.setCustomId('select')
+			.setCustomId('rolegroup')
 			.setPlaceholder('Nothing selected')
 			.addOptions(rolesArray)
 			.setMinValues(minSelection ? minSelection : 0)
