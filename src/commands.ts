@@ -2,19 +2,22 @@ import { readdirSync } from 'fs';
 import { REST } from '@discordjs/rest'
 import { Routes } from 'discord-api-types/v9';
 const path = require('node:path');
-import { Client, Collection } from 'discord.js';
+import { Collection } from 'discord.js';
+import { Command } from './command';
 
-const commandsPath = path.join(__dirname, 'commands');
-const commandSubDirs = readdirSync(commandsPath);
 let commands: Array<JSON> = []
 
 export function deployCommands(client: any): Array<JSON> {
 	if (!client.commands) client.commands = new Collection();
+
+	const commandsPath = path.join(__dirname, 'commands');
+	const commandSubDirs = readdirSync(commandsPath);
+
 	for (const subDir of commandSubDirs) {
 		try {
-			const command = require(path.join(commandsPath, subDir, 'index.ts'))
-			client.commands.set(command.data.name, command);
-			commands.push(command.data.toJSON());
+			const command: Command = require(path.join(commandsPath, subDir, 'index.ts'))
+			client.commands.set(command.cmdData.name, command);
+			commands.push(command.cmdData.toJSON());
 		} catch (error) {
 			console.log(`Error Reading Dir: ${error}`)
 		}

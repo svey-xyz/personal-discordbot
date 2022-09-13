@@ -14,10 +14,9 @@ const client = new Client({
 });
 
 const data = new databaseHandler();
-const sequelizer = data.getSequelize
 
-ready(client, sequelizer);
-interactionCreate(client);
+ready(client, data);
+interactionCreate(client, data);
 
 client.login(token)
 

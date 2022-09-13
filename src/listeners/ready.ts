@@ -1,21 +1,16 @@
 import { Client } from "discord.js";
-import { Sequelize } from "sequelize";
 import { deployCommands } from "../commands";
+import databaseHandler from "../databaseHandler";
 
-export default (client: Client, sequelizer: Sequelize): void => {
+export default (client: Client, data: databaseHandler): void => {
 	client.on("ready", async () => {
 		if (!client.user || !client.application) {
 			return;
 		}
 
-		try {
-			await sequelizer.authenticate();
-			console.log('Connection has been established successfully.');
-		} catch (error) {
-			console.error('Unable to connect to the database:', error);
-		}
-
+		await data.ready();
 		await deployCommands(client);
+
 		console.log(`${client.user.username} is online`);
 	});
 };

@@ -4,6 +4,7 @@ import { Command } from "../../command";
 import { commandData } from "./slashCommand"
 import { rolesAsMessageRows } from "./functions/rolesAsMessageRows";
 import { DataTypes } from "sequelize";
+import databaseHandler from "../../databaseHandler";
 
 const roleGroupStructure = {
 	name: {
@@ -20,8 +21,8 @@ const roleGroupStructure = {
 }
 
 const roleGroups: Command = {
-	data: commandData,
-	async execute(client: Client, interaction: CommandInteraction) {
+	cmdData: commandData,
+	async execute(client: Client, data: databaseHandler, interaction: CommandInteraction) {
 		const embed = new MessageEmbed()
 			.setColor('#0099ff')
 			.setTitle('Some title')
@@ -36,6 +37,7 @@ const roleGroups: Command = {
 				switch(interaction.options.getSubcommand()) {
 					case('create'):
 						let tieredRole = interaction.options.getRole('tiered-role')
+						console.log(`Role group created with tiered role: `, tieredRole)
 						break;
 					case('edit'):
 						break;
@@ -46,7 +48,7 @@ const roleGroups: Command = {
 			})
 			.catch(console.error);
 	},
-	async select(client: Client, interaction: SelectMenuInteraction) {
+	async select(client: Client, data: databaseHandler, interaction: SelectMenuInteraction) {
 		const selectedRoleIDs = interaction.values;
 		selectedRoleIDs.forEach(roleID => {
 			const role = interaction.guild?.roles.fetch(roleID)
