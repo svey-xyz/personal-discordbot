@@ -1,5 +1,4 @@
-export const { SlashCommandBuilder } = require('@discordjs/builders');
-
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 export const commandData: any = new SlashCommandBuilder()
 	.setName('rolegroup')

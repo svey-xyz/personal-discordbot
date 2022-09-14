@@ -1,9 +1,8 @@
-import { BaseCommandInteraction, Client, MessageEmbed, SelectMenuInteraction } from "discord.js";
+import { Client, SelectMenuInteraction, CommandInteraction } from "discord.js";
 import databaseHandler from "./databaseHandler";
-export const { SlashCommandBuilder } = require('@discordjs/builders');
-export const discordInterface = { BaseCommandInteraction, Client, MessageEmbed }
 
 export interface Command {
 	cmdData: any,
-	execute(client: Client, data: databaseHandler, interaction: BaseCommandInteraction): void
+	execute(data: databaseHandler, interaction: CommandInteraction): void,
+	select?(data: databaseHandler, interaction: SelectMenuInteraction): void
 }

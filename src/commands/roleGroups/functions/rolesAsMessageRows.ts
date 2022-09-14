@@ -1,17 +1,21 @@
-import { Collection,  MessageActionRow, MessageSelectMenu, Role } from "discord.js";
+import { Collection,  MessageActionRow, MessageSelectMenu, MessageSelectOptionData, Role } from "discord.js";
 
-type MessageSelectOption = { label: string, description: string, value: string }
-
-export async function rolesToMessageComponent(roles: Array<Role> | Collection<string, Role>, minSelection?: number, maxSelection?: number): Promise<Array<MessageActionRow>> {
+export async function rolesToMessageComponent(tieredrole: Role, roles: Array<Role> | Collection<string, Role>, minSelection?: number, maxSelection?: number): Promise<Array<MessageActionRow>> {
 	let messageRows = rolesArrayToMessageRows(roles);
 
 	let rows: any = []
 	messageRows.forEach((rolesArray, index) => {
+		const customID = JSON.stringify({
+			cmdN: 'rolegroup',
+			fn: 'c',
+			tR: tieredrole.id
+		})
 		let selectComponent = new MessageSelectMenu()
-			.setCustomId(`roleGroupRow-${index}`)
+			.setCustomId(customID)
 			.setPlaceholder('Nothing selected')
 			.addOptions(rolesArray)
 			.setMinValues(minSelection ? minSelection : 0)
+			// .setDisabled(true)
 
 		rows.push(
 			new MessageActionRow().addComponents(
@@ -29,14 +33,14 @@ export async function rolesToMessageComponent(roles: Array<Role> | Collection<st
  * @param {Array<Role>} rolesArray
  * @return {*}  {Array<Array<MessageSelectOption>>}
  */
-function rolesArrayToMessageRows(rolesArray: Array<Role> | Collection<string, Role>): Array<Array<MessageSelectOption>> {
-	let splitRolesRows: Array<Array<MessageSelectOption>> = []
+function rolesArrayToMessageRows(rolesArray: Array<Role> | Collection<string, Role>): Array<Array<MessageSelectOptionData>> {
+	let splitRolesRows: Array<Array<MessageSelectOptionData>> = []
 	let splitIndex: number = 0
 	let loopIndex: number = 0
 
 	rolesArray.forEach((role, index) => {
 		if (!splitRolesRows[splitIndex]) splitRolesRows[splitIndex] = []
-		let roleRow: MessageSelectOption = { label: role.name, description: '', value: role.id }
+		let roleRow: MessageSelectOptionData = { label: role.name, description: '', value: role.id }
 
 		splitRolesRows[splitIndex].push(roleRow)
 		if (loopIndex % 25 == 0 && loopIndex != 0) splitIndex++;

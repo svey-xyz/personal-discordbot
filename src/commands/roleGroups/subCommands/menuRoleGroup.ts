@@ -16,7 +16,7 @@ export async function menuRoleGroup(commandInteraction: CommandInteraction, data
 
 	const roleGroup = await data.getArrayData(dataSet, tieredRole.id)
 
-	const rows = await rolesToMessageComponent(await roleIDsToRolesArray(roleGroup, commandInteraction));
+	const rows = await rolesToMessageComponent(tieredRole, await roleIDsToRolesArray(roleGroup, commandInteraction));
 	await commandInteraction.reply({ content: `Role menu for: ${tieredRole.name}!`, components: [...rows] })
 		.then(async () => {
 			const message: Message = <Message>(await commandInteraction.fetchReply())

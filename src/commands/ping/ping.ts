@@ -9,7 +9,7 @@ const commandData: any = new SlashCommandBuilder()
 
 const ping: Command = {
 	cmdData: commandData,
-	async execute(client: Client, data: databaseHandler, interaction: BaseCommandInteraction) {
+	async execute(data: databaseHandler, interaction: BaseCommandInteraction) {
 		const embed = new MessageEmbed().setDescription('Pong!');
 
 		await interaction.reply({ embeds: [embed], ephemeral: true })
