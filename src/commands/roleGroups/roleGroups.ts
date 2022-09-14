@@ -30,17 +30,27 @@ const roleGroups: Command = {
 
 		switch (selectCustomID.fn) {
 			case ('c'):
+				const dataSet: string = `${selectInteraction.guildId}-roleGroups`
 				console.log('madeIT!')
+
+				let roleData = await data.getArrayData(dataSet, selectCustomID.tR)
 
 				const component = selectInteraction.component as MessageSelectMenu
 				const removed = component.options.filter((option) => {
 					return !values.includes(option.value)
 				})
 
+				for (const option of removed) {
+					roleData.splice(roleData.indexOf(option.value), 1);
+				}
 				for (const id of values) {
-					// data.setArrayData(id.split('%'))
+					if (roleData.indexOf(id) == -1) roleData.push(id);
 				}
 
+				await data.setArrayData(dataSet, selectCustomID.tR, roleData)
+				console.log(await data.getArrayData(dataSet, selectCustomID.tR))
+
+				selectInteraction.reply({content:'Roles added', ephemeral: true})
 				break;
 			default:
 				break;

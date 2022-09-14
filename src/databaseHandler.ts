@@ -30,10 +30,10 @@ export default class databaseHandler {
 		return await store.set(k, JSON.stringify(v));
 	}
 
-	public async getArrayData(namespace: string, k: string) {
+	public async getArrayData(namespace: string, k: string): Promise<Array<string>> {
 		const store = this.getStore(namespace);
 		const storedData = await store.get(k)
-		return storedData ? JSON.parse(storedData) : undefined;
+		return storedData ? JSON.parse(storedData) : [];
 	}
 
 	private createStore(namespace: string): typeof Keyv {
