@@ -4,6 +4,7 @@ import { Command } from "../../command";
 import { commandData } from "./commandData"
 import databaseHandler from "../../databaseHandler";
 import { createRoleGroup } from "./subCommands/createRoleGroup";
+import { menuRoleGroup } from "./subCommands/menuRoleGroup";
 
 const roleGroups: Command = {
 	cmdData: commandData,
@@ -15,9 +16,11 @@ const roleGroups: Command = {
 			case ('create'):
 				createRoleGroup(commandInteraction, data, dataSet);
 				break;
-			case ('edit'):
+			case ('menu'):
+				menuRoleGroup(commandInteraction, data, dataSet)
 				break;
 			default:
+				commandInteraction.reply({ content: `No command found!` })
 				break;
 		}
 		

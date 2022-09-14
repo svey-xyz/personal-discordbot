@@ -1,8 +1,6 @@
-import { CommandInteraction, Message, Role } from "discord.js";
+import { CommandInteraction, Message, Role, MessageButton, MessageActionRow, SelectMenuInteraction, Collection, MessageSelectMenu } from "discord.js";
 import databaseHandler from "src/databaseHandler";
-import { rolesAsMessageRows } from "../functions/rolesAsMessageRows";
-
-
+import { rolesToMessageComponent } from "../functions/rolesAsMessageRows";
 
 export async function createRoleGroup(commandInteraction: CommandInteraction, data: databaseHandler, dataSet: string) {
 	const filter = (i: any) => {
@@ -20,17 +18,47 @@ export async function createRoleGroup(commandInteraction: CommandInteraction, da
 		return;
 	}
 
-	const rows = await rolesAsMessageRows(commandInteraction, 1);
-	await commandInteraction.reply({ content: `Creating a role group for: ${tieredRole.name}!`, ephemeral: true, components: [...rows] })
-		.then(async () => {
+	const guild = commandInteraction.guild;
+	if (guild == null) throw new Error("Are you in a guild?");
+	const guildRoles = (await guild.roles.fetch()).filter(r => !r.managed); // filter out managed roles (i.e. bots)
 
-			const message: Message = <Message>(await commandInteraction.fetchReply())
-			message.awaitMessageComponent({ filter, componentType: "SELECT_MENU", time: 60000 })
-				.then(async (selectInteraction: any) => {
-					await data.setArrayData(dataSet, tieredRole.id, selectInteraction.values)
-					commandInteraction.editReply({ content: `Role group created for ${tieredRole.name}.`, components: [] })
-				})
-				.catch((err: any) => console.log(`No interactions were collected: `, err));
+	const roleSelectRows = await rolesToMessageComponent(guildRoles, 1);
+
+	await commandInteraction.reply({ content: `Creating a role group for: ${tieredRole.name}!`, ephemeral: true })
+		.then(async () => {
+			roleSelectRows.forEach(roleRow => {
+				commandInteraction.followUp({ ephemeral: true, components: [roleRow] }).then(async (roleRowMessage) => {
+					(<Message>roleRowMessage).awaitMessageComponent({ filter, componentType: "SELECT_MENU", time: 120000 })
+						.then(async (selectInteraction: SelectMenuInteraction) => {
+							addRoles(data, dataSet, tieredRole.id, selectInteraction)
+						})
+						.catch((err: any) => console.log(`No interactions were collected: `, err));
+				});
+			});
 		})
 		.catch(console.error);
+}
+
+async function addRoles(data: databaseHandler, dataSet: string, tieredRole: string,  selectInteraction: SelectMenuInteraction) {
+	const selectedRoleIDs = selectInteraction.values
+	const rolesRows:any = selectInteraction.message.components![0].components;
+	let rowRoleIDs: Array<string> = []
+
+	rolesRows.forEach((row: MessageSelectMenu) => {
+		if (row.customId == selectInteraction.customId)
+		row.options.forEach(option => {
+			rowRoleIDs.push(option.value)
+		});
+	});
+
+	let existingRoles = await data.getArrayData(dataSet, tieredRole)
+	let roles: Array<string> = (typeof existingRoles !== 'undefined') ? existingRoles : [];
+	rowRoleIDs.forEach((roleID) => {
+		if (selectedRoleIDs.indexOf(roleID) == -1) roles.splice(roles.indexOf(roleID), 1)
+		if (roles.indexOf(roleID) == -1 && selectedRoleIDs.indexOf(roleID) !== -1) roles.push(roleID);
+	});
+
+	console.log(`Selected roles: `, rowRoleIDs)
+
+	await data.setArrayData(dataSet, tieredRole, roles)
 }

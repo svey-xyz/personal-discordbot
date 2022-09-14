@@ -1,31 +1,14 @@
-import { BaseCommandInteraction, Guild,  MessageActionRow, MessageSelectMenu } from "discord.js";
+import { Collection,  MessageActionRow, MessageSelectMenu, Role } from "discord.js";
 
 type MessageSelectOption = { label: string, description: string, value: string }
-type MessageSelectOptions = Array<MessageSelectOption>
 
-export async function rolesAsMessageRows(interaction: BaseCommandInteraction, minSelection?: number, maxSelection?: number): Promise<Array<MessageActionRow>> {
-	const guild = interaction.guild
-	if (guild == null) throw new Error("Are you in a guild?");
-	
-	const guildRoles = await guild.roles.fetch();
-	let splitRoleSelection: Array<MessageSelectOptions> = []
-	let arrayIndex: number = 0
-	let loopIndex: number = 0;
-
-	guildRoles.filter(r => !r.managed).forEach((role, index) => { // Filter out managed (i.e. bot) roles
-		if (!splitRoleSelection[arrayIndex]) splitRoleSelection[arrayIndex] = []
-
-		let typedRole: MessageSelectOption = { label: role.name, description: '', value: role.id }
-		splitRoleSelection[arrayIndex].push(typedRole)
-
-		loopIndex++;
-		if (loopIndex % 25 == 0) arrayIndex++;
-	});
+export async function rolesToMessageComponent(roles: Array<Role> | Collection<string, Role>, minSelection?: number, maxSelection?: number): Promise<Array<MessageActionRow>> {
+	let messageRows = rolesArrayToMessageRows(roles);
 
 	let rows: any = []
-	splitRoleSelection.forEach((rolesArray, index) => {
+	messageRows.forEach((rolesArray, index) => {
 		let selectComponent = new MessageSelectMenu()
-			.setCustomId('rolegroup')
+			.setCustomId(`roleGroupRow-${index}`)
 			.setPlaceholder('Nothing selected')
 			.addOptions(rolesArray)
 			.setMinValues(minSelection ? minSelection : 0)
@@ -38,4 +21,26 @@ export async function rolesAsMessageRows(interaction: BaseCommandInteraction, mi
 	});
 
 	return rows;
+}
+
+/**
+ *
+ *	Returns an array of arrays because discord can only handle a max of 25 rows per message
+ * @param {Array<Role>} rolesArray
+ * @return {*}  {Array<Array<MessageSelectOption>>}
+ */
+function rolesArrayToMessageRows(rolesArray: Array<Role> | Collection<string, Role>): Array<Array<MessageSelectOption>> {
+	let splitRolesRows: Array<Array<MessageSelectOption>> = []
+	let splitIndex: number = 0
+	let loopIndex: number = 0
+
+	rolesArray.forEach((role, index) => {
+		if (!splitRolesRows[splitIndex]) splitRolesRows[splitIndex] = []
+		let roleRow: MessageSelectOption = { label: role.name, description: '', value: role.id }
+
+		splitRolesRows[splitIndex].push(roleRow)
+		if (loopIndex % 25 == 0 && loopIndex != 0) splitIndex++;
+		loopIndex++;
+	});
+	return splitRolesRows;
 }
