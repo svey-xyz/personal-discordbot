@@ -26,3 +26,14 @@ export const commandData: any = new SlashCommandBuilder()
 						.setRequired(true)
 			)
 	)
+	.addSubcommand((subcommand: any) =>
+		subcommand
+			.setName('menu')
+			.setDescription('Create a role group menu.')
+			.addRoleOption(
+				(option: any) =>
+					option.setName('tiered-role')
+						.setDescription('Role group head role.')
+						.setRequired(true)
+			)
+	)
