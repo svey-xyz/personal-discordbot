@@ -1,4 +1,4 @@
-import type { databaseHandler } from "../src/databaseHandler";
+import type databaseHandler from "../src/databaseHandler";
 
 declare global {
 	var __BOT_DATA__: databaseHandler;

@@ -14,13 +14,17 @@
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
 		"removeComments": true,
-		"noImplicitAny": false,
+		// "noImplicitAny": false,
 		"typeRoots": [
 			"node_modules/@types",
-			"@types"
+			"@types",
+			"@types/global.d.ts"
 		],
 		"sourceMap": false,
 		"baseUrl": "./"
+	},
+	"ts-node": {
+		"files": true
 	},
 	"files": [
 		"src/bot.ts"
