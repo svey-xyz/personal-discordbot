@@ -13,10 +13,10 @@ const client = new Client({
 	partials: ["MESSAGE", "CHANNEL", "REACTION"]
 });
 
-const data = new databaseHandler();
+global.__BOT_DATA__ = new databaseHandler();
 
-ready(client, data);
-interactionCreate(client, data);
+ready(client);
+interactionCreate(client);
 
 client.login(token)
 

@@ -1,14 +1,15 @@
 import { Collection,  MessageActionRow, MessageSelectMenu, MessageSelectOptionData, Role } from "discord.js";
 
-export async function rolesToMessageComponent(tieredrole: Role, roles: Array<Role> | Collection<string, Role>, minSelection?: number, maxSelection?: number): Promise<Array<MessageActionRow>> {
-	let messageRows = rolesArrayToMessageRows(roles);
+export async function rolesToMessageComponent(tieredRoleID: string, roles: Array<Role> | Collection<string, Role>, fn: 'c' | 'm', preSelected?: Array<string>,
+	minSelection: number = 1, maxSelection?: number): Promise<Array<MessageActionRow>> {
+	let messageRows = rolesArrayToMessageRows(tieredRoleID, roles, preSelected);
 
 	let rows: any = []
 	messageRows.forEach((rolesArray, index) => {
 		const customID = JSON.stringify({
 			cmdN: 'rolegroup',
-			fn: 'c',
-			tR: tieredrole.id
+			fn: fn,
+			tR: tieredRoleID
 		})
 		let selectComponent = new MessageSelectMenu()
 			.setCustomId(customID)
@@ -23,7 +24,6 @@ export async function rolesToMessageComponent(tieredrole: Role, roles: Array<Rol
 			)
 		)
 	});
-
 	return rows;
 }
 
@@ -33,18 +33,27 @@ export async function rolesToMessageComponent(tieredrole: Role, roles: Array<Rol
  * @param {Array<Role>} rolesArray
  * @return {*}  {Array<Array<MessageSelectOption>>}
  */
-function rolesArrayToMessageRows(rolesArray: Array<Role> | Collection<string, Role>): Array<Array<MessageSelectOptionData>> {
+function rolesArrayToMessageRows(tieredRoleID: string, rolesArray: Array<Role> | Collection<string, Role>, preSelected?: Array<string>): Array<Array<MessageSelectOptionData>> {
 	let splitRolesRows: Array<Array<MessageSelectOptionData>> = []
 	let splitIndex: number = 0
 	let loopIndex: number = 0
 
-	rolesArray.forEach((role, index) => {
+	for (const role of rolesArray.values()) {
 		if (!splitRolesRows[splitIndex]) splitRolesRows[splitIndex] = []
-		let roleRow: MessageSelectOptionData = { label: role.name, description: '', value: role.id }
+		if (role.id == tieredRoleID) continue;
+		let selected = (typeof preSelected !== 'undefined') ? preSelected.indexOf(role.id) !== -1 : false;
+		let roleRow: MessageSelectOptionData = {
+			label: role.name,
+			description: '',
+			value: role.id,
+			default: selected
+		}
 
 		splitRolesRows[splitIndex].push(roleRow)
-		if (loopIndex % 25 == 0 && loopIndex != 0) splitIndex++;
+
 		loopIndex++;
-	});
+		if (loopIndex % 25 == 0) splitIndex++;
+	}
+
 	return splitRolesRows;
 }

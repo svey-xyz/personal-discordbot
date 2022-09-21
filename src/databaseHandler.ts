@@ -2,9 +2,11 @@ const Keyv = require('keyv');
 
 export default class databaseHandler {
 	private stores: Map<string, typeof Keyv>
+	private guildNamespace: string
 
 	constructor() {
 		this.stores = new Map;
+		this.guildNamespace = ''
 	}
 
 	public async ready() {

@@ -1,14 +1,13 @@
 import { Client } from "discord.js";
 import { deployCommands } from "../commands";
-import databaseHandler from "../databaseHandler";
 
-export default (client: Client, data: databaseHandler): void => {
+export default (client: Client): void => {
 	client.on("ready", async () => {
 		if (!client.user || !client.application) {
 			return;
 		}
 
-		await data.ready();
+		await global.__BOT_DATA__.ready();
 		await deployCommands(client);
 
 		console.log(`${client.user.username} is online`);

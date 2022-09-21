@@ -14,8 +14,10 @@
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
 		"removeComments": true,
+		"noImplicitAny": false,
 		"typeRoots": [
-			"node_modules/@types"
+			"node_modules/@types",
+			"@types"
 		],
 		"sourceMap": false,
 		"baseUrl": "./"
@@ -24,7 +26,8 @@
 		"src/bot.ts"
 	],
 	"include": [
-		"./**/*.ts"
+		"./**/*.ts",
+		"./src/@types/global.d.ts"
 	],
 	"exclude": [
 		"node_modules",

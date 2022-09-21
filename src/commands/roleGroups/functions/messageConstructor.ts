@@ -1,25 +1,65 @@
-import { MessageActionRow, MessageButton } from "discord.js";
+import { MessageActionRow, MessageButton, MessageEmbed, MessageOptions, MessagePayload, Role } from "discord.js";
 
-export function constructMessageRows(roleRows: Array<MessageActionRow>, activePage: number = 0): Array<MessageActionRow> {
+export function constructMessageOptions(tieredRoleID: string, roleRows: Array<MessageActionRow>, fn: 'c' | 'm', activePage: number = 0): MessageOptions {
+	let payload: MessageOptions
 	let msgRows: Array<MessageActionRow> = []
+
+	const nextBtnID = JSON.stringify({
+		cmdN: 'rolegroup',
+		fn: fn,
+		btn: 'n',
+		tR: tieredRoleID,
+		p: activePage
+	})
+	const prevBtnID = JSON.stringify({
+		cmdN: 'rolegroup',
+		fn: fn,
+		btn: 'p',
+		tR: tieredRoleID,
+		p: activePage
+	})
+	const applyBtnID = JSON.stringify({
+		cmdN: 'rolegroup',
+		fn: fn,
+		btn: 'a',
+		tR: tieredRoleID,
+	})
+
 	let nextBtn = new MessageButton()
-		.setCustomId('nextPageBtn')
+		.setCustomId(nextBtnID)
 		.setLabel('Next')
 		.setStyle('SECONDARY')
 		.setDisabled(true)
 	let prevBtn = new MessageButton()
-		.setCustomId('prevPageBtn')
+		.setCustomId(prevBtnID)
 		.setLabel('Previous')
 		.setStyle('SECONDARY')
 		.setDisabled(true)
+	let applyBtn = new MessageButton()
+		.setCustomId(applyBtnID)
+		.setLabel('Apply')
+		.setStyle('SUCCESS')
+		.setDisabled(false)
 
-	msgRows.push(roleRows[activePage]);
-	if (roleRows.length > 1) {
-		if (activePage > 0) prevBtn.setDisabled(false).setStyle('PRIMARY');
-		if (activePage < roleRows.length - 1) nextBtn.setDisabled(false).setStyle('PRIMARY');
-		let buttonRow = new MessageActionRow().addComponents([prevBtn, nextBtn])
-		msgRows.push(buttonRow)
+	try {
+		if (activePage < 0) throw new Error("Page number can't be negative!")
+		if (activePage >= roleRows.length) throw new Error("Page number cannot exceed number of pages!")
+
+		let buttonRow: MessageActionRow = new MessageActionRow()
+		msgRows.push(roleRows[activePage]);
+		if (roleRows.length > 1) {
+			if (activePage > 0) prevBtn.setDisabled(false).setStyle('PRIMARY');
+			if (activePage < roleRows.length - 1) nextBtn.setDisabled(false).setStyle('PRIMARY');
+			buttonRow.addComponents([prevBtn, nextBtn])
+			msgRows.push(buttonRow)
+		}
+		buttonRow.addComponents([applyBtn])
+		payload = { components: msgRows }
+
+	} catch (err) {
+		console.log(`Pagination `, err)
+		payload = { content: `Pagination Error: ${err}`, components: [] }
 	}
 
-	return msgRows;
+	return payload;
 }

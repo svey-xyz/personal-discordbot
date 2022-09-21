@@ -1,9 +1,8 @@
 import { SelectMenuInteraction, CommandInteraction, ButtonInteraction } from "discord.js";
 
-export interface Command {
-	cmdData: any,
+export interface SubCommand {
 	execute(interaction: CommandInteraction): void,
-	select?(interaction: SelectMenuInteraction): void
-	button?(interaction: ButtonInteraction): void
+	selectHandler?(interaction: SelectMenuInteraction): void
+	buttonHandler?(interaction: ButtonInteraction): void
 
 }
