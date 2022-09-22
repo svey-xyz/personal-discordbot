@@ -42,7 +42,11 @@ export default class databaseHandler {
 	private createStore(namespace: string): typeof Keyv {
 		if (typeof this.stores == 'undefined') throw new Error('Stores are not defined!');
 		if (typeof this.stores.get(namespace) !== 'undefined') return this.stores.get(namespace)!;
-		const store: typeof Keyv = new Keyv({ namespace: namespace, store: new KeyvRedis('redis://localhost:6379')})
+		
+		const store: typeof Keyv = process.env.NODE_ENV === 'production' ? 
+			new Keyv({ namespace: namespace, store: new KeyvRedis(`redis://${process.env.DATABASE_HOST}`)}) :
+			new Keyv({ namespace: namespace })
+
 		this.stores.set(namespace, store)
 		return store;
 	}
