@@ -1,4 +1,5 @@
 const Keyv = require('keyv');
+const KeyvRedis = require('@keyvhq/redis')
 
 export default class databaseHandler {
 	private stores: Map<string, typeof Keyv>
@@ -41,7 +42,7 @@ export default class databaseHandler {
 	private createStore(namespace: string): typeof Keyv {
 		if (typeof this.stores == 'undefined') throw new Error('Stores are not defined!');
 		if (typeof this.stores.get(namespace) !== 'undefined') return this.stores.get(namespace)!;
-		const store: typeof Keyv = new Keyv({ namespace: namespace })
+		const store: typeof Keyv = new Keyv({ namespace: namespace, store: new KeyvRedis('redis://localhost:6379')})
 		this.stores.set(namespace, store)
 		return store;
 	}

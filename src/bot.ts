@@ -1,7 +1,7 @@
 import { Client, Intents } from "discord.js";
 import ready from "./listeners/ready";
 import interactionCreate from "./listeners/interactionCreate";
-import databaseHandler from "./databaseHandler";
+import databaseHandler from "./database/databaseHandler";
 
 const dotenv = require('dotenv');
 dotenv.config()

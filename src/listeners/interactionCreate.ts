@@ -1,6 +1,5 @@
 import { CommandInteraction, Client, Interaction, SelectMenuInteraction, ContextMenuInteraction, ButtonInteraction, } from "discord.js";
 import { Command } from "src/command";
-import databaseHandler from "../databaseHandler";
 
 export default (client: Client): void => {
 	client.on("interactionCreate", async (interaction: Interaction) => {

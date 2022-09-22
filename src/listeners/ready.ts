@@ -8,7 +8,7 @@ export default (client: Client): void => {
 		}
 
 		await global.__BOT_DATA__.ready();
-		await deployCommands(client);
+		deployCommands(client);
 
 		console.log(`${client.user.username} is online`);
 	});

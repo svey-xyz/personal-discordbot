@@ -1,7 +1,6 @@
 import { BaseCommandInteraction, MessageEmbed, Client } from "discord.js";
 const { SlashCommandBuilder } = require('@discordjs/builders');
 import { Command } from "../../command";
-import databaseHandler from "../../databaseHandler";
 
 const commandData: any = new SlashCommandBuilder()
 	.setName('ping')
