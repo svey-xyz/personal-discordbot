@@ -1,4 +1,4 @@
-import { CommandInteraction, GuildMember, Message, MessageSelectMenu, Role, SelectMenuInteraction } from "discord.js";
+import { CommandInteraction, GuildMember, Message, MessageSelectMenu, Role, SelectMenuInteraction, Permissions } from "discord.js";
 import { SubCommand } from "src/subCommand";
 import { constructMessageOptions } from "../functions/messageConstructor";
 import { rolesToMessageComponent } from "../functions/rolesAsMessageRows";
@@ -7,6 +7,8 @@ export const menu: SubCommand = {
 	async execute(commandInteraction: CommandInteraction) {
 		const tieredRole: Role = commandInteraction.options.getRole('tiered-role') as Role;
 		const tieredRoleID: string = tieredRole.id
+
+		if (!(<Readonly<Permissions>>commandInteraction.member?.permissions).has(Permissions.FLAGS.ADMINISTRATOR)) return commandInteraction.reply("This command is for admins only!")
 
 		// Handle existing data
 		if (!(await global.__BOT_DATA__.hasData(commandInteraction.guildId as string, tieredRole.id))) {

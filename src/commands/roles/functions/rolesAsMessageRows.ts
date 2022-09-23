@@ -7,7 +7,7 @@ export async function rolesToMessageComponent(tieredRoleID: string, roles: Array
 	let rows: any = []
 	messageRows.forEach((rolesArray, index) => {
 		const customID = JSON.stringify({
-			cmdN: 'rolegroup',
+			cmdN: 'roles',
 			fn: fn,
 			tR: tieredRoleID
 		})

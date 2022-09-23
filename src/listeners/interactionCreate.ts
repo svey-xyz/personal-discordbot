@@ -33,24 +33,25 @@ const handleButton = (client: any, interaction: ButtonInteraction): void => {
 }
 
 const handleSelect = (client: any, interaction: SelectMenuInteraction): void => {
+	console.log(`Parsed ID: `, JSON.parse(interaction.customId))
+
 	const command: Command = client.commands.get(JSON.parse(interaction.customId).cmdN);
 	if (!command) {
-		// interaction.followUp({ content: "An error has occurred" });
+		interaction.reply({ content: "An error has occurred", ephemeral: true });
 		return;
 	}
-
 	try {
 		if (command.select) command.select(interaction);
 	} catch (error) {
 		console.error(error);
-		// interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 };
 
 const handleCommand = (client: any, interaction: CommandInteraction | ContextMenuInteraction): void => {
 	const command = client.commands.get(interaction.commandName);
 	if (!command) {
-		interaction.followUp({ content: "An error has occurred" });
+		interaction.reply({ content: "An error has occurred", ephemeral: true });
 		return;
 	}
 

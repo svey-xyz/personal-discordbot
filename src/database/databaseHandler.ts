@@ -3,11 +3,9 @@ const KeyvRedis = require('@keyvhq/redis')
 
 export default class databaseHandler {
 	private stores: Map<string, typeof Keyv>
-	private guildNamespace: string
 
 	constructor() {
 		this.stores = new Map;
-		this.guildNamespace = ''
 	}
 
 	public async ready() {
@@ -29,7 +27,7 @@ export default class databaseHandler {
 	}
 
 	public async setArrayData(namespace: string, k: string, v: Array<any>) {
-		const store = this.getStore(namespace);
+		let store = this.getStore(namespace);
 		return await store.set(k, JSON.stringify(v));
 	}
 
@@ -43,11 +41,14 @@ export default class databaseHandler {
 		if (typeof this.stores == 'undefined') throw new Error('Stores are not defined!');
 		if (typeof this.stores.get(namespace) !== 'undefined') return this.stores.get(namespace)!;
 		
-		const store: typeof Keyv = process.env.NODE_ENV === 'production' ? 
+		const store: typeof Keyv = (process.env.NODE_ENV === 'production') ? 
 			new Keyv({ namespace: namespace, store: new KeyvRedis(`redis://${process.env.DATABASE_HOST}`)}) :
 			new Keyv({ namespace: namespace })
 
+		console.log("Process env: ", process.env.NODE_ENV)
+
 		this.stores.set(namespace, store)
+
 		return store;
 	}
 

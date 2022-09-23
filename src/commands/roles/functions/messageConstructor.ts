@@ -5,21 +5,21 @@ export function constructMessageOptions(tieredRoleID: string, roleRows: Array<Me
 	let msgRows: Array<MessageActionRow> = []
 
 	const nextBtnID = JSON.stringify({
-		cmdN: 'rolegroup',
+		cmdN: 'roles',
 		fn: fn,
 		btn: 'n',
 		tR: tieredRoleID,
 		p: activePage
 	})
 	const prevBtnID = JSON.stringify({
-		cmdN: 'rolegroup',
+		cmdN: 'roles',
 		fn: fn,
 		btn: 'p',
 		tR: tieredRoleID,
 		p: activePage
 	})
 	const applyBtnID = JSON.stringify({
-		cmdN: 'rolegroup',
+		cmdN: 'roles',
 		fn: fn,
 		btn: 'a',
 		tR: tieredRoleID,

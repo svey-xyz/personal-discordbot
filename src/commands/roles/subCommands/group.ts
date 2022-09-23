@@ -1,20 +1,21 @@
-import { CommandInteraction, Role, ButtonInteraction, Interaction, Collection, MessageOptions, InteractionUpdateOptions, SelectMenuInteraction, MessageSelectMenu } from "discord.js";
+import { CommandInteraction, Role, ButtonInteraction, Interaction, Collection, MessageOptions, InteractionUpdateOptions, SelectMenuInteraction, MessageSelectMenu, Permissions } from "discord.js";
 import { SubCommand } from "src/subCommand";
 import { constructMessageOptions } from "../functions/messageConstructor";
 import { rolesToMessageComponent } from "../functions/rolesAsMessageRows";
 
-export const create: SubCommand = {
+export const group: SubCommand = {
 	async execute(commandInteraction: CommandInteraction) {
 		const tieredRole: Role = <Role>commandInteraction.options.getRole('tiered-role');
 		const tieredRoleID: string = tieredRole.id
 
+		if (!(<Readonly<Permissions>>commandInteraction.member?.permissions).has(Permissions.FLAGS.ADMINISTRATOR)) return commandInteraction.reply("This command is for admins only!")
 		// Handle existing data
-		if (await global.__BOT_DATA__.hasData(commandInteraction.guildId as string, tieredRole.id)) {
-			commandInteraction.reply({
-				content: `A group already exist for: ${tieredRole.name}! You can edit or delete the existing group.`, ephemeral: true
-			})
-			return;
-		}
+		// if (await global.__BOT_DATA__.hasData(commandInteraction.guildId as string, tieredRole.id)) {
+		// 	commandInteraction.reply({
+		// 		content: `A group already exist for: ${tieredRole.name}! You can edit or delete the existing group.`, ephemeral: true
+		// 	})
+		// 	return;
+		// }
 
 		const roles = await getAllRoles(commandInteraction)
 		const preSelected = await global.__BOT_DATA__.getArrayData(commandInteraction.guildId as string, tieredRoleID)
@@ -57,8 +58,8 @@ export const create: SubCommand = {
 		}
 
 	},
-
 	async selectHandler(selectInteraction: SelectMenuInteraction) {
+		console.log('select!')
 		const { customId, values, member } = selectInteraction
 		const selectCustomID = JSON.parse(customId)
 		const tieredRoleID = selectCustomID.tR

@@ -2,15 +2,15 @@ import { ButtonInteraction, Client, CommandInteraction, MessageSelectMenu, Selec
 
 import { Command } from "../../command";
 import { commandData } from "./commandData"
-import { create } from "./subCommands/create";
+import { group } from "./subCommands/group";
 import { menu } from "./subCommands/menu";
 
-const roleGroups: Command = {
+const roles: Command = {
 	cmdData: commandData,
 	async execute(commandInteraction: CommandInteraction) {
 		switch (commandInteraction.options.getSubcommand()) {
-			case ('create'):
-				create.execute(commandInteraction);
+			case ('group'):
+				group.execute(commandInteraction);
 				break;
 			case ('menu'):
 				menu.execute(commandInteraction)
@@ -21,12 +21,13 @@ const roleGroups: Command = {
 		}
 	},
 	async select(selectInteraction: SelectMenuInteraction) {
+		console.log('root select')
 		const { customId, values, member } = selectInteraction
 		const selectCustomID = JSON.parse(customId)
 		
 		switch (selectCustomID.fn) {
 			case ('c'):
-				create.selectHandler!(selectInteraction)
+				group.selectHandler!(selectInteraction)
 				break;
 			case ('m'):
 				menu.selectHandler!(selectInteraction)
@@ -41,7 +42,7 @@ const roleGroups: Command = {
 
 		switch (selectCustomID.fn) {
 			case ('c'):
-				create.buttonHandler!(buttonInteraction)
+				group.buttonHandler!(buttonInteraction)
 				break;
 			default:
 				break;
@@ -49,4 +50,4 @@ const roleGroups: Command = {
 	}
 };
 
-module.exports = roleGroups;
+module.exports = roles;
