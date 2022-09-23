@@ -1,4 +1,5 @@
 import { CommandInteraction, Role, ButtonInteraction, Interaction, Collection, MessageOptions, InteractionUpdateOptions, SelectMenuInteraction, MessageSelectMenu, Permissions } from "discord.js";
+import { adminOnly } from "../../../permissions/commandPermissions";
 import { SubCommand } from "src/subCommand";
 import { constructMessageOptions } from "../functions/messageConstructor";
 import { rolesToMessageComponent } from "../functions/rolesAsMessageRows";
@@ -8,22 +9,18 @@ export const group: SubCommand = {
 		const tieredRole: Role = <Role>commandInteraction.options.getRole('tiered-role');
 		const tieredRoleID: string = tieredRole.id
 
-		if (!(<Readonly<Permissions>>commandInteraction.member?.permissions).has(Permissions.FLAGS.ADMINISTRATOR)) return commandInteraction.reply("This command is for admins only!")
+		if (!adminOnly(commandInteraction)) return;
+
 		// Handle existing data
-		// if (await global.__BOT_DATA__.hasData(commandInteraction.guildId as string, tieredRole.id)) {
-		// 	commandInteraction.reply({
-		// 		content: `A group already exist for: ${tieredRole.name}! You can edit or delete the existing group.`, ephemeral: true
-		// 	})
-		// 	return;
-		// }
+		let existingData: boolean = await global.__BOT_DATA__.hasData(commandInteraction.guildId as string, tieredRole.id)
+		let createMessage = existingData ? `Editing existing role group for: ${tieredRole.name}!` : `Creating a role group for: ${tieredRole.name}!`
 
 		const roles = await getAllRoles(commandInteraction)
 		const preSelected = await global.__BOT_DATA__.getArrayData(commandInteraction.guildId as string, tieredRoleID)
 		const roleSelectRows = await rolesToMessageComponent(tieredRoleID, roles, 'c', preSelected);
 		const messageOptions = constructMessageOptions(tieredRoleID, roleSelectRows, 'c')
 
-
-		await commandInteraction.reply({ content: `Creating a role group for: ${tieredRole.name}!`, ephemeral: true, components: messageOptions.components })
+		await commandInteraction.reply({ content: createMessage, ephemeral: true, components: messageOptions.components })
 	},
 	
 	async buttonHandler(buttonInteraction: ButtonInteraction) {
