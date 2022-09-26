@@ -15,7 +15,8 @@ export function deployCommands(client: any): Array<JSON> {
 
 	for (const subDir of commandSubDirs) {
 		try {
-			const command: Command = require(path.join(commandsPath, subDir, `${subDir}`))
+			const commandPath: string = path.join(commandsPath, subDir, subDir) as string;
+			const command: Command = require(commandPath)
 			client.commands.set(command.cmdData.name, command);
 			commands.push(command.cmdData.toJSON());
 		} catch (error) {

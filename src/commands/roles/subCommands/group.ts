@@ -3,6 +3,7 @@ import { adminOnly } from "../../../permissions/commandPermissions";
 import { SubCommand } from "src/subCommand";
 import { constructMessageOptions } from "../functions/messageConstructor";
 import { rolesToMessageComponent } from "../functions/rolesAsMessageRows";
+import { getGuildRoles } from "../functions/getGuildRoles";
 
 export const group: SubCommand = {
 	async execute(commandInteraction: CommandInteraction) {
@@ -13,9 +14,10 @@ export const group: SubCommand = {
 
 		// Handle existing data
 		let existingData: boolean = await global.__BOT_DATA__.hasData(commandInteraction.guildId as string, tieredRole.id)
-		let createMessage = existingData ? `Editing existing role group for: ${tieredRole.name}!` : `Creating a role group for: ${tieredRole.name}!`
+		let createMessage = existingData ? `Editing existing role group for: ${tieredRole.name}! Dismiss this message when you're done.` :
+			`Creating a role group for: ${tieredRole.name}! Dismiss this message when you're done.`
 
-		const roles = await getAllRoles(commandInteraction)
+		const roles = await getGuildRoles(commandInteraction)
 		const preSelected = await global.__BOT_DATA__.getArrayData(commandInteraction.guildId as string, tieredRoleID)
 		const roleSelectRows = await rolesToMessageComponent(tieredRoleID, roles, 'c', preSelected);
 		const messageOptions = constructMessageOptions(tieredRoleID, roleSelectRows, 'c')
@@ -28,7 +30,7 @@ export const group: SubCommand = {
 		const buttonCustomID = JSON.parse(customId)
 		const tieredRoleID: string = buttonCustomID.tR
 
-		const roles = await getAllRoles(buttonInteraction)
+		const roles = await getGuildRoles(buttonInteraction)
 		const preSelected = await global.__BOT_DATA__.getArrayData(buttonInteraction.guildId as string, tieredRoleID)
 		const roleSelectRows = await rolesToMessageComponent(tieredRoleID, roles, 'c', preSelected);
 
@@ -80,10 +82,3 @@ export const group: SubCommand = {
 	}
 }
 
-async function getAllRoles(interaction: Interaction): Promise<Collection<string, Role>> {
-	const guild = interaction.guild;
-	if (guild == null) throw new Error("Are you in a guild?");
-	// const guildRoles = (await guild.roles.fetch()).filter(r => !r.managed); // filter out managed roles (i.e. bots)
-	const guildRoles = (await guild.roles.fetch())
-	return guildRoles;
-}

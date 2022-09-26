@@ -28,7 +28,9 @@ export default class databaseHandler {
 
 	public async setArrayData(namespace: string, k: string, v: Array<any>) {
 		let store = this.getStore(namespace);
-		return await store.set(k, JSON.stringify(v));
+		if (v.length > 0) await store.set(k, JSON.stringify(v));
+		else store.delete(k);
+		return;
 	}
 
 	public async getArrayData(namespace: string, k: string): Promise<Array<string>> {

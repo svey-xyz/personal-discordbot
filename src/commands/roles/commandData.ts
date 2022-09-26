@@ -2,11 +2,11 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 
 export const commandData: any = new SlashCommandBuilder()
 	.setName('roles')
-	.setDescription("Manage roles.")
+	.setDescription("Manage role groups.")
 	.addSubcommand((subcommand: any) =>
 		subcommand
 			.setName('group')
-			.setDescription('Create a new role group.')
+			.setDescription('Create or edit a role group.')
 			.addRoleOption(
 				(option: any) =>
 					option.setName('tiered-role')
@@ -24,4 +24,9 @@ export const commandData: any = new SlashCommandBuilder()
 						.setDescription('Role group head role.')
 						.setRequired(true)
 			)
+	)
+	.addSubcommand((subcommand: any) =>
+		subcommand
+			.setName('list')
+			.setDescription('List all role groups.')
 	)

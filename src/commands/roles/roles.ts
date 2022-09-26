@@ -1,8 +1,9 @@
-import { ButtonInteraction, Client, CommandInteraction, MessageSelectMenu, SelectMenuInteraction } from "discord.js";
+import { ButtonInteraction, CommandInteraction, SelectMenuInteraction } from "discord.js";
 
 import { Command } from "../../command";
 import { commandData } from "./commandData"
 import { group } from "./subCommands/group";
+import { list } from "./subCommands/list";
 import { menu } from "./subCommands/menu";
 
 const roles: Command = {
@@ -14,6 +15,9 @@ const roles: Command = {
 				break;
 			case ('menu'):
 				menu.execute(commandInteraction)
+				break;
+			case ('list'):
+				list.execute(commandInteraction)
 				break;
 			default:
 				commandInteraction.reply({ content: `No command found!` })

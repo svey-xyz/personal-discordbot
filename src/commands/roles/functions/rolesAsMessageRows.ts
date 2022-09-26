@@ -1,7 +1,6 @@
 import { Collection,  MessageActionRow, MessageSelectMenu, MessageSelectOptionData, Role } from "discord.js";
 
-export async function rolesToMessageComponent(tieredRoleID: string, roles: Array<Role> | Collection<string, Role>, fn: 'c' | 'm', preSelected?: Array<string>,
-	minSelection: number = 1, maxSelection?: number): Promise<Array<MessageActionRow>> {
+export async function rolesToMessageComponent(tieredRoleID: string, roles: Array<Role> | Collection<string, Role>, fn: 'c' | 'm', preSelected?: Array<string>): Promise<Array<MessageActionRow>> {
 	let messageRows = rolesArrayToMessageRows(tieredRoleID, roles, preSelected);
 
 	let rows: any = []
@@ -15,13 +14,12 @@ export async function rolesToMessageComponent(tieredRoleID: string, roles: Array
 			.setCustomId(customID)
 			.setPlaceholder('Nothing selected')
 			.addOptions(rolesArray)
-			.setMinValues(minSelection ? minSelection : 0)
+			.setMinValues(0)
+			.setMaxValues(rolesArray.length)
 			// .setDisabled(true)
 
 		rows.push(
-			new MessageActionRow().addComponents(
-				maxSelection ? selectComponent.setMaxValues(maxSelection) : selectComponent
-			)
+			new MessageActionRow().addComponents(selectComponent)
 		)
 	});
 	return rows;

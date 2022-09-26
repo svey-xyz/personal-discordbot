@@ -45,15 +45,17 @@ export function constructMessageOptions(tieredRoleID: string, roleRows: Array<Me
 		if (activePage < 0) throw new Error("Page number can't be negative!")
 		if (activePage >= roleRows.length) throw new Error("Page number cannot exceed number of pages!")
 
-		let buttonRow: MessageActionRow = new MessageActionRow()
 		msgRows.push(roleRows[activePage]);
+
+		let buttonRow: MessageActionRow = new MessageActionRow()
 		if (roleRows.length > 1) {
 			if (activePage > 0) prevBtn.setDisabled(false).setStyle('PRIMARY');
 			if (activePage < roleRows.length - 1) nextBtn.setDisabled(false).setStyle('PRIMARY');
 			buttonRow.addComponents([prevBtn, nextBtn])
 			msgRows.push(buttonRow)
+
 		}
-		buttonRow.addComponents([applyBtn])
+		
 		payload = { components: msgRows }
 
 	} catch (err) {
