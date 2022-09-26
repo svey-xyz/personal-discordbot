@@ -25,7 +25,6 @@ const roles: Command = {
 		}
 	},
 	async select(selectInteraction: SelectMenuInteraction) {
-		console.log('root select')
 		const { customId, values, member } = selectInteraction
 		const selectCustomID = JSON.parse(customId)
 		

@@ -58,7 +58,6 @@ export const group: SubCommand = {
 
 	},
 	async selectHandler(selectInteraction: SelectMenuInteraction) {
-		console.log('select!')
 		const { customId, values, member } = selectInteraction
 		const selectCustomID = JSON.parse(customId)
 		const tieredRoleID = selectCustomID.tR

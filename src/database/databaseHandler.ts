@@ -47,8 +47,6 @@ export default class databaseHandler {
 			new Keyv({ namespace: namespace, store: new KeyvRedis(`redis://${process.env.DATABASE_HOST}`)}) :
 			new Keyv({ namespace: namespace })
 
-		console.log("Process env: ", process.env.NODE_ENV)
-
 		this.stores.set(namespace, store)
 
 		return store;
